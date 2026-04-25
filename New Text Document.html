@@ -1,0 +1,1773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arosa Campus Cafe Payment Fraud Elimination Solution</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- MathJax -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)'], ['$$', '$$'], ['\\[', '\\]']], 
+                displayMath: []
+            },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --bg-primary: #050510;
+            --bg-secondary: #0f0f1e;
+            --text-primary: #e0e0e0;
+            --text-secondary: #a0a0b0;
+            --accent-neon: #00ff41;
+            --accent-purple: #bc13fe;
+            --accent-cyan: #00d9ff;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glow-color: rgba(0, 255, 65, 0.3);
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            color: var(--text-primary);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.7;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* Animated background particles */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(188, 19, 254, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(0, 217, 255, 0.06) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 40px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Hero Section */
+        .hero {
+            padding: 100px 0 80px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .hero-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            background: linear-gradient(90deg, rgba(188, 19, 254, 0.15), rgba(0, 217, 255, 0.15));
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            font-size: 0.85rem;
+            color: var(--accent-cyan);
+            margin-bottom: 30px;
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        
+        h1 {
+            font-size: 3.8rem;
+            font-weight: 900;
+            line-height: 1.15;
+            margin-bottom: 35px;
+            background: linear-gradient(135deg, var(--accent-neon) 0%, var(--accent-cyan) 50%, var(--accent-purple) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -1.5px;
+            animation: gradientShift 8s ease infinite;
+            background-size: 200% 200%;
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        .authors {
+            font-size: 1.25rem;
+            color: var(--text-primary);
+            margin-bottom: 18px;
+            font-weight: 500;
+        }
+        
+        .authors span {
+            margin: 0 12px;
+            color: var(--accent-neon);
+        }
+        
+        .affiliation {
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+        
+        .date {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+            opacity: 0.7;
+        }
+        
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 45px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 14px 32px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        
+        .btn:hover {
+            border-color: var(--accent-neon);
+            box-shadow: 0 0 25px var(--glow-color);
+            transform: translateY(-2px);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, rgba(0, 255, 65, 0.15), rgba(0, 217, 255, 0.15));
+            border-color: var(--accent-neon);
+        }
+        
+        /* Glass Card Sections */
+        .section {
+            margin: 80px auto;
+            padding: 55px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            backdrop-filter: blur(20px);
+            transition: all 0.4s ease;
+        }
+        
+        .section:hover {
+            border-color: rgba(0, 255, 65, 0.3);
+            box-shadow: 0 8px 40px rgba(0, 255, 65, 0.08);
+        }
+        
+        .section-title {
+            font-size: 2.3rem;
+            font-weight: 800;
+            margin-bottom: 35px;
+            color: var(--text-primary);
+            position: relative;
+            padding-bottom: 18px;
+            letter-spacing: -0.5px;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-neon), var(--accent-cyan));
+            border-radius: 2px;
+        }
+        
+        .section-subtitle {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin: 45px 0 22px;
+            color: var(--accent-cyan);
+            letter-spacing: -0.3px;
+        }
+        
+        .content-text {
+            font-size: 1.05rem;
+            line-height: 1.85;
+            color: var(--text-primary);
+            margin-bottom: 1.6em;
+            max-width: 95%;
+        }
+        
+        .content-text strong {
+            color: var(--accent-neon);
+            font-weight: 700;
+        }
+        
+        /* Solution Cards */
+        .solution-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 28px;
+            margin: 40px 0;
+        }
+        
+        .solution-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--glass-border);
+            border-radius: 18px;
+            padding: 32px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .solution-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-neon), var(--accent-purple));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .solution-card:hover::before {
+            opacity: 1;
+        }
+        
+        .solution-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(0, 255, 65, 0.3);
+            box-shadow: 0 12px 35px rgba(0, 255, 65, 0.12);
+        }
+        
+        .solution-rank {
+            font-size: 2rem;
+            margin-bottom: 14px;
+        }
+        
+        .solution-card h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+        
+        .solution-card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .solution-card li {
+            padding: 7px 0;
+            color: var(--text-secondary);
+            font-size: 0.96rem;
+            position: relative;
+            padding-left: 22px;
+        }
+        
+        .solution-card li::before {
+            content: '▹';
+            position: absolute;
+            left: 0;
+            color: var(--accent-neon);
+            font-weight: bold;
+        }
+        
+        /* Stats Highlight */
+        .stats-highlight {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin: 40px 0;
+            padding: 35px;
+            background: linear-gradient(135deg, rgba(0, 255, 65, 0.05), rgba(0, 217, 255, 0.05));
+            border: 1px solid rgba(0, 255, 65, 0.2);
+            border-radius: 16px;
+        }
+        
+        .stat-item {
+            flex: 1;
+            min-width: 180px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: var(--accent-neon);
+            font-family: 'JetBrains Mono', monospace;
+            margin-bottom: 8px;
+        }
+        
+        .stat-label {
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 32px 0;
+            font-size: 0.98rem;
+            background: rgba(255, 255, 255, 0.01);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        thead {
+            background: linear-gradient(135deg, rgba(0, 255, 65, 0.1), rgba(0, 217, 255, 0.1));
+        }
+        
+        th {
+            padding: 18px 16px;
+            text-align: left;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            border-bottom: 2px solid var(--glass-border);
+            font-size: 0.92rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        td {
+            padding: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-secondary);
+        }
+        
+        tr:hover {
+            background: rgba(0, 255, 65, 0.03);
+        }
+        
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+        
+        /* Images */
+        .figure-container {
+            margin: 45px 0;
+            text-align: center;
+        }
+        
+        .figure-img {
+            width: 100%;
+            max-width: 650px;
+            border-radius: 16px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s ease;
+        }
+        
+        .figure-img:hover {
+            transform: scale(1.02);
+            box-shadow: 0 12px 50px rgba(0, 255, 65, 0.15);
+            border-color: var(--accent-neon);
+        }
+        
+        figcaption {
+            margin-top: 18px;
+            font-size: 0.92rem;
+            color: var(--text-secondary);
+            font-style: italic;
+            line-height: 1.6;
+        }
+        
+        /* Feature List */
+        .feature-list {
+            list-style: none;
+            padding: 0;
+            margin: 28px 0;
+        }
+        
+        .feature-list li {
+            padding: 14px 0 14px 38px;
+            position: relative;
+            font-size: 1.02rem;
+            color: var(--text-primary);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+        
+        .feature-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .feature-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--accent-neon);
+            font-weight: 900;
+            font-size: 1.3rem;
+        }
+        
+        /* Warning/Alert Box */
+        .alert-box {
+            padding: 26px 32px;
+            background: linear-gradient(135deg, rgba(188, 19, 254, 0.08), rgba(255, 107, 107, 0.08));
+            border-left: 4px solid var(--accent-purple);
+            border-radius: 12px;
+            margin: 32px 0;
+            font-size: 1rem;
+        }
+        
+        .alert-box strong {
+            color: var(--accent-purple);
+        }
+        
+        /* Success Box */
+        .success-box {
+            padding: 26px 32px;
+            background: linear-gradient(135deg, rgba(0, 255, 65, 0.08), rgba(0, 217, 255, 0.08));
+            border-left: 4px solid var(--accent-neon);
+            border-radius: 12px;
+            margin: 32px 0;
+            font-size: 1.02rem;
+        }
+
+        /* Info Box */
+        .info-box {
+            padding: 26px 32px;
+            background: linear-gradient(135deg, rgba(0, 217, 255, 0.08), rgba(188, 19, 254, 0.08));
+            border-left: 4px solid var(--accent-cyan);
+            border-radius: 12px;
+            margin: 32px 0;
+            font-size: 1.02rem;
+        }
+        
+        /* Citation/References */
+        .citation-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .citation-list li {
+            padding: 16px 0 16px 36px;
+            position: relative;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            font-size: 0.94rem;
+            color: var(--text-secondary);
+        }
+        
+        .citation-list li::before {
+            content: attr(data-ref);
+            position: absolute;
+            left: 0;
+            color: var(--accent-neon);
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        .citation-list a {
+            color: var(--accent-cyan);
+            text-decoration: none;
+            word-break: break-all;
+        }
+        
+        .citation-list a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+            margin: 35px 0;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(to bottom, var(--accent-neon), var(--accent-cyan));
+            border-radius: 2px;
+        }
+        
+        .timeline-item {
+            position: relative;
+            padding: 20px 0 20px 30px;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -36px;
+            top: 26px;
+            width: 12px;
+            height: 12px;
+            background: var(--accent-neon);
+            border-radius: 50%;
+            border: 3px solid var(--bg-primary);
+            box-shadow: 0 0 10px var(--glow-color);
+        }
+        
+        .timeline-item h4 {
+            color: var(--accent-cyan);
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+        
+        .timeline-item p {
+            color: var(--text-secondary);
+            font-size: 0.98rem;
+        }
+        
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 60px 0 40px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--glass-border);
+            margin-top: 100px;
+        }
+        
+        /* Code/Badge styling */
+        code, .mono {
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(0, 255, 65, 0.08);
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-size: 0.9em;
+            color: var(--accent-neon);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .container {
+                padding: 0 30px;
+            }
+            
+            h1 {
+                font-size: 2.8rem;
+            }
+            
+            .section {
+                padding: 40px 32px;
+            }
+            
+            .section-title {
+                font-size: 1.9rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 20px;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .hero {
+                padding: 70px 0 60px;
+            }
+            
+            .section {
+                padding: 32px 24px;
+                margin: 50px auto;
+            }
+            
+            .section-title {
+                font-size: 1.6rem;
+            }
+            
+            .solution-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-highlight {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            table {
+                font-size: 0.86rem;
+            }
+            
+            th, td {
+                padding: 12px 10px;
+            }
+
+            .figure-img {
+                max-width: 100%;
+            }
+        }
+        
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(var(--accent-neon), var(--accent-cyan));
+            border-radius: 5px;
+        }
+        
+        /* Selection Color */
+        ::selection {
+            background: rgba(0, 255, 65, 0.3);
+            color: var(--text-primary);
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- Hero Section -->
+    <div class="hero">
+        <div class="container">
+         <div class="hero-badge">Ai Lab Semester Project Documentation</div>
+            <h1>Aroosa Campus Cafe Payment Fraud Elimination Solution</h1>
+            <div class="authors">
+                <span>Hamza 22P-9178</span> · <span>Mihaal 23P-0685</span> · <span>Miqdaam 24P-0686</span>
+            </div>
+            <div class="affiliation">FAST NUCES Peshawar</div>
+            <div class="date">Submission Date: April 25, 2026</div>
+            
+        <!--<div class="action-buttons">
+                <a href="#abstract" class="btn btn-primary">📊 View Executive Summary</a>
+                <a href="#solution" class="btn">🔧 Primary Solution</a>
+                <a href="#comparison" class="btn">⚖️ Compare Solutions</a>
+            </div>
+        </div>
+    </div>  -->    
+    
+    <!-- Abstract / Executive Summary -->
+    <div class="container">
+        <section id="abstract" class="section">
+            <h2 class="section-title">Executive Summary</h2>
+            
+            <p class="content-text">
+                Arosa Cafe at FAST New Campus faces critical revenue loss due to customers using <strong>fake EasyPaisa/JazzCash payment screenshots</strong>. Our project presents <strong>three tiered solutions</strong> ranked by cost and effectiveness to completely eliminate this fraud.
+            </p>
+            
+            <div class="solution-grid">
+                <div class="solution-card">
+                    <div class="solution-rank">🥇</div>
+                    <h3>Android POS Terminal with Dynamic QR + NFC Tap Pay</h3>
+                    <ul>
+                        <li><strong>100% fraud elimination</strong></li>
+                        <li>~PKR 15k–25k upfront cost</li>
+                        <li><strong>&lt;1 month payback period</strong></li>
+                        <li>275% faster checkout during peak hours</li>
+                        <li>Full accounting automation</li>
+                    </ul>
+                </div>
+                
+                <div class="solution-card">
+                    <div class="solution-rank">🥈</div>
+                    <h3>Paytm-Style Sound Box + Static QR (Theoretical)</h3>
+                    <ul>
+                        <li>~80% fraud reduction</li>
+                        <li>~PKR 2k–4k cost</li>
+                        <li><em>Not yet available in Pakistan</em></li>
+                        <li>Based on proven Indian market models</li>
+                        <li>Limited scalability</li>
+                    </ul>
+                </div>
+                
+                <div class="solution-card">
+                    <div class="solution-rank">🥉</div>
+                    <h3>Dedicated Merchant Phone + SMS Verification</h3>
+                    <ul>
+                        <li>~60% fraud reduction</li>
+                        <li><strong>Zero upfront cost</strong> if reusing old phone</li>
+                        <li>Immediate implementation possible</li>
+                        <li>Emergency fallback only</li>
+                        <li>No automation capabilities</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="stats-highlight">
+                <div class="stat-item">
+                    <div class="stat-value">PKR 67.5K–84.4K</div>
+                    <div class="stat-label">Estimated Monthly Loss</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">PKR 810K+</div>
+                    <div class="stat-label">Annual Projected Loss</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">&lt;30 Days</div>
+                    <div class="stat-label">POS Payback Period</div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Problem Statement -->
+        <section id="problem" class="section">
+            <h2 class="section-title">Problem Statement: The Fake Screenshot Crisis</h2>
+            
+            <h3 class="section-subtitle">How the Scam Works</h3>
+            
+            <p class="content-text">
+                During peak operating hours (<strong>11:00 AM – 3:00 PM</strong>), Arosa Cafe experiences extreme operational pressure that creates the perfect environment for systematic payment fraud:
+            </p>
+            
+            <ol style="list-style: decimal; padding-left: 24px;">
+                <li style="padding: 10px 0; color: var(--text-primary);">Customer orders food during peak rush (e.g., total: PKR 225)</li>
+                <li style="padding: 10px 0; color: var(--text-primary);">Instead of completing real payment, customer uses <strong>AI-powered screenshot editing apps</strong> to create near-perfect fake "Payment Successful" screens that mimic real app interfaces exactly—including correct timestamps, transaction IDs, and animated processing animations</li>
+                <li style="padding: 10px 0; color: var(--text-primary);">Cashier (overwhelmed by 20-person queue) glances at screenshot for <strong>1 second</strong> and accepts it as valid proof of payment</li>
+                <li style="padding: 10px 0; color: var(--text-primary);">Customer leaves without paying — total loss of both product cost (~40%) and profit margin (~60%)</li>
+            </ol>
+
+            <h3 class="section-subtitle">Fraud Pattern Analysis: Why Scammers Target Campus Cafes</h3>
+
+            <div class="info-box">
+                <p><strong>🎓 The Student Demographic Factor:</strong> University campuses present unique vulnerabilities that make them prime targets for payment fraud:</p>
+                <br>
+                <ul style="list-style: disc; padding-left: 24px; color: var(--text-secondary);">
+                    <li><strong>High Transaction Volume:</strong> 100+ daily customers during semester periods create statistical cover—individual fraud gets lost in the noise until end-of-month reconciliation</li>
+                    <li><strong>Familiarity Exploitation:</strong> Student cashiers often know customers personally (classmates, friends, seniors), making confrontation socially awkward or perceived as "rude"</li>
+                    <li><strong>Limited Training:</strong> Part-time student staff turnover is high (every 4–6 months due to graduation/schedule changes). Each new batch requires fraud detection training from scratch</li>
+                    <li><strong>Peer Pressure Dynamics:</strong> Word spreads quickly through student networks—"Arosa doesn't check payments carefully" becomes common knowledge within weeks</li>
+                    <li><strong>Cash Flow Urgency:</strong> Students facing mid-semester financial pressure may rationalize small-scale fraud as "victimless" or "the cafe makes enough money anyway"</li>
+                </ul>
+            </div>
+            
+            <h3 class="section-subtitle">Estimated Financial Impact</h3>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Metric</th>
+                        <th>Estimated Value</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Daily Customer Footfall</strong></td>
+                        <td>~100 students/day</td>
+                        <td>Average campus cafe traffic</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Peak Operating Hours</strong></td>
+                        <td>11:00 AM – 3:00 PM</td>
+                        <td>4-hour maximum pressure window</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Average Spend per Visit</strong></td>
+                        <td>~PKR 200–250</td>
+                        <td>1–2 items (burger/shake/coffee combo)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Estimated Scam Rate</strong></td>
+                        <td><code style="color: #ff6b6b;">~10%</code></td>
+                        <td>10 out of every 100 customers attempt fraud</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Daily Fraud Loss</strong></td>
+                        <td><code>PKR 2,250–2,500</code></td>
+                        <td>10 scammers × PKR 225 avg order value</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Monthly Fraud Loss</strong></td>
+                        <td><code style="color: #ff6b6b; font-size: 1.05em;">PKR 67,500–75,000</code></td>
+                        <td>Daily loss × 30 operational days</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Annual Projected Loss</strong></td>
+                        <td><code style="color: #ff6b6b; font-size: 1.05em;">PKR 810,000+</code></td>
+                        <td>Compounding monthly losses over 12 months</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 class="section-subtitle">Hidden Costs Beyond Direct Revenue Loss</h3>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Hidden Cost Category</th>
+                        <th>Monthly Estimate</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Accounting Labor Overhead</strong></td>
+                        <td>PKR 15,000</td>
+                        <td>~5 hours/week manually reconciling payments, investigating missing transactions, disputing fraudulent charges</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Inventory Waste</strong></td>
+                        <td>PKR 5,000</td>
+                        <td>Food prepared for "paid" orders never actually paid for must be discarded</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Staff Turnover Costs</strong></td>
+                        <td>PKR 3,000</td>
+                        <td>Recruitment/training replacement cashiers who quit due to high-stress fraud environment</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Reputation Damage Multiplier</strong></td>
+                        <td>+5% MoM scam rate increase</td>
+                        <td>Word-of-mouth encourages more students to attempt fraud if unchecked</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Total Hidden Monthly Cost</strong></td>
+                        <td><code style="color: #ff6b6b;">PKR 23,000+</code></td>
+                        <td>In addition to PKR 67,500 direct revenue loss</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3 class="section-subtitle">Why Fraud Thrives During Peak Hours</h3>
+            
+            <div class="alert-box">
+                <strong>Queue Pressure:</strong> 15–20 students waiting constantly → Cashiers feel rushed to process transactions fast<br><br>
+                <strong>Cognitive Overload:</strong> Part-time student cashiers simultaneously handle order-taking, cash management, delivery coordination, AND payment verification<br><br>
+                <strong>No Time for Verification:</strong> Checking each screenshot adds 30+ seconds per transaction — would double queue wait times<br><br>
+                <strong>Social Pressure:</strong> Student cashiers uncomfortable confronting peers about suspicious screenshots
+            </div>
+        </section>
+        
+        <!-- Primary Solution -->
+        <section id="solution" class="section">
+            <h2 class="section-title">Primary Solution: Android POS Terminal with Dynamic QR Code Generation</h2>
+            
+            <h3 class="section-subtitle">Core Technology: Per-Transaction Dynamic QR Codes</h3>
+            
+            <p class="content-text">
+                This is our <strong>primary recommended solution</strong> — fully supported by official Pakistani banking regulations (State Bank of Pakistan QR Payment Standards). The system uses cryptographically secure, single-use dynamic QR codes that are generated uniquely for each transaction.
+            </p>
+
+            <figure class="figure-container">
+                <img src="https://z-cdn-media.chatglm.cn/files/1b92e62c-ebbb-4a47-97cd-15248ac25080.png?auth_key=1877050613-bc07402e26c644f8b8bf5f2794c50a15-0-6d5f58d768cc7b56c39799b44f531a21" alt="Android POS Terminal Hardware" class="figure-img">
+                <figcaption>Figure 1: Android handheld smart POS terminal — the core hardware for our primary solution. This all-in-one device features a touchscreen display for dynamic QR generation, built-in thermal receipt printer, NFC contactless reader for tap payments, and runs all major Pakistani merchant payment apps natively (EasyPaisa, JazzCash, Raast).</figcaption>
+            </figure>
+            
+            <h3 class="section-subtitle">Required Hardware: All-in-One Smart POS Terminal</h3>
+            
+            <p class="content-text">An Android-based handheld smart POS terminal with integrated capabilities:</p>
+            
+            <ul class="feature-list">
+                <li><strong>Touchscreen Display</strong> (5–6 inch HD capacitive): Shows dynamic QR codes, transaction status, merchant app interface</li>
+                <li><strong>Thermal Receipt Printer</strong> (58mm built-in): Prints dual receipts (vendor copy + customer copy) automatically at 80mm/second print speed</li>
+                <li><strong>NFC/Contactless Reader</strong>: Accepts tap payments from smartphones and contactless cards (ISO 14443 compliant, supports Visa/Mastercard/UnionPay)</li>
+                <li><strong>QR Scanner/Generator</strong>: High-resolution camera reads customer QR codes AND generates unique dynamic merchant QR codes per SBP EMVCo standard</li>
+                <li><strong>Connectivity Suite</strong>: Wi-Fi 6 + 4G LTE mobile data (dual-SIM support) + Bluetooth 5.0 for real-time processor communication</li>
+                <li><strong>Battery System</strong>: 5000–6000 mAh lithium-ion, powers 10+ hours of active use without charging, quick-charge capable (0-80% in 60 minutes)</li>
+                <li><strong>Storage & Processing</strong>: Octa-core processor, 3GB+ RAM, 32GB+ internal storage for transaction history, app installation, and offline queue caching</li>
+            </ul>
+            
+            <h3 class="section-subtitle">How Dynamic QR Works: Step-by-Step Transaction Flow</h3>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Step</th>
+                        <th>Action</th>
+                        <th>Technical Details</th>
+                        <th>Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>1</strong></td>
+                        <td>Cashier enters bill amount into POS touchscreen</td>
+                        <td>e.g., types <code>225</code></td>
+                        <td>~1 sec</td>
+                    </tr>
+                    <tr>
+                        <td><strong>2</strong></td>
+                        <td>POS sends API request to payment processor server</td>
+                        <td>Contains: Merchant ID, Amount, Timestamp, Session Token</td>
+                        <td>&lt;1 sec</td>
+                    </tr>
+                    <tr>
+                        <td><strong>3</strong></td>
+                        <td>Server returns encrypted EMVCo-compliant dynamic QR</td>
+                        <td><strong>Amount-locked</strong> [Tag ID 54], Single-use, Time-limited [Tag ID 50]</td>
+                        <td>Instant</td>
+                    </tr>
+                    <tr>
+                        <td><strong>4</strong></td>
+                        <td>Customer scans QR using any Pakistani payment app</td>
+                        <td>EasyPaisa, JazzCash, SadaPay, NeaPay, HBL, UBL, Raast banks</td>
+                        <td>5–10 sec</td>
+                    </tr>
+                    <tr>
+                        <td><strong>5</strong></td>
+                        <td>Customer sees pre-filled amount (unchangeable), confirms via PIN/fingerprint</td>
+                        <td>Amount embedded in QR cannot be modified per SBP standard</td>
+                        <td>2–3 sec</td>
+                    </tr>
+                    <tr>
+                        <td><strong>6</strong></td>
+                        <td>POS receives encrypted confirmation from processor server</td>
+                        <td><strong>NOT from customer's phone</strong> — direct server verification via TLS 1.3</td>
+                        <td>2–3 sec</td>
+                    </tr>
+                    <tr>
+                        <td><strong>7</strong></td>
+                        <td>Green checkmark appears + thermal printer auto-prints dual receipts</td>
+                        <td>Vendor copy (records) + Customer copy (proof of purchase)</td>
+                        <td>2–3 sec</td>
+                    </tr>
+                    <tr>
+                        <td><strong>8</strong></td>
+                        <td>Next customer arrives → POS generates entirely new unique QR code</td>
+                        <td>Previous QR immediately invalidated permanently in database</td>
+                        <td>&lt;1 sec</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 class="section-subtitle">Security Architecture Deep Dive</h3>
+
+            <div class="success-box">
+                <h4 style="color: var(--accent-neon); margin-bottom: 16px; font-size: 1.2rem;">🔒 Five-Layer Cryptographic Protection System</h4>
+                
+                <ul class="feature-list">
+                    <li><strong>Layer 1 — Amount Locking (SBP Tag ID 54):</strong> Bill amount is hardcoded into QR code payload per State Bank of Pakistan's mandatory interoperable QR standard. Customers absolutely cannot underpay, overpay, or modify the amount when scanning. The payment app displays the pre-filled amount as read-only.</li>
+                    
+                    <li><strong>Layer 2 — Single-Use Tokenization:</strong> Once any payment is successfully processed against a dynamic QR, it is immediately and permanently marked as "consumed" in the payment processor's distributed database. A second attempt to use the same QR (even 1 millisecond later) triggers instant rejection: "QR code already used or expired." No replay attacks possible.</li>
+                    
+                    <li><strong>Layer 3 — Time-Bounded Expiry (SBP Tag ID 50):</strong> Each QR code contains an expiration timestamp configurable by the merchant. We recommend 3 minutes during peak 11AM-3PM hours for maximum throughput speed, 5 minutes during off-peak periods. Expired QRs are rejected server-side regardless of network latency.</li>
+                    
+                    <li><strong>Layer 4 — Session Token Encryption:</strong> Every dynamic QR contains a cryptographically random 256-bit session token generated by the payment processor's secure key management system (KMS). This token is unique per transaction, unpredictable, and validated against the processor's real-time ledger before payment authorization.</li>
+                    
+                    <li><strong>Layer 5 — Direct Server-to-Device Confirmation:</strong> Verification comes from the payment processor's secure servers directly to your POS device via encrypted TLS 1.3 channel — NOT from the customer's smartphone. This eliminates the fundamental vulnerability of the current system where fake screenshots on customer devices are accepted as proof. The POS only trusts its own server connection.</li>
+                </ul>
+            </div>
+
+            <h3 class="section-subtitle">Regulatory Compliance & Standards Alignment</h3>
+
+            <div class="info-box">
+                <p><strong>✅ Full compliance with Pakistani banking regulations:</strong></p>
+                <br>
+                <ul style="list-style: disc; padding-left: 24px; color: var(--text-secondary);">
+                    <li><strong>State Bank of Pakistan (SBP) CL2-Annex Standard:</strong> Interoperable QR Code Payments specification — our dynamic QR format fully complies with Tag IDs 00-63, including mandatory fields for Merchant Account Info (Tag 26-51), Transaction Currency (Tag 53), Transaction Amount (Tag 54), and Tip/Convenience Indicator (Tag 56)</li>
+                    <li><strong>Raast P2M Guidelines:</strong> Person-to-Merchant payment rules for instant settlement via Pakistan's national payment switch</li>
+                    <li><strong>PCI DSS Level 1 Certification:</strong> Payment Card Industry Data Security Standard — highest global tier required for devices processing card-present transactions</li>
+                    <li><strong>EMVCo QR Code Specification:</strong> International standard for dynamic QR-based payments ensuring cross-border interoperability if needed in future</li>
+                    <li><strong>Data Protection Compliance:</strong> Transaction data stored locally on POS with AES-256 encryption; no customer PII retained beyond regulatory retention requirements</li>
+                </ul>
+            </div>
+        </section>
+        
+        <!-- NFC Tap Pay -->
+        <section id="tappay" class="section">
+            <h2 class="section-title">Additional Feature: NFC Tap Pay Support</h2>
+            
+            <h3 class="section-subtitle">Contactless Tap-to-Pay Integration</h3>
+            
+            <p class="content-text">
+                Your POS also supports NFC "tap to pay" for customers who prefer not to scan QR codes or want even faster checkout. This feature accepts contactless payments from both smartphones and physical cards, providing the fastest possible transaction experience.
+            </p>
+            
+            <h3 class="section-subtitle">Supported Payment Methods</h3>
+            
+            <div class="solution-grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
+                <div class="solution-card">
+                    <h3>✅ Mobile Wallets</h3>
+                    <ul>
+                        <li>JazzCash mobile wallet (via app)</li>
+                        <li>SadaPay virtual debit card</li>
+                        <li>NeaPay virtual debit card</li>
+                        <li>Nayapay digital wallet</li>
+                    </ul>
+                </div>
+                <div class="solution-card">
+                    <h3>✅ Digital Wallet Platforms</h3>
+                    <ul>
+                        <li>Google Wallet integration</li>
+                        <li>Apple Pay support</li>
+                        <li>Samsung Pay compatible</li>
+                        <li>Huawei Pay ready</li>
+                    </ul>
+                </div>
+                <div class="solution-card">
+                    <h3>✅ Physical Contactless Cards</h3>
+                    <ul>
+                        <li>Contactless Visa debit/credit</li>
+                        <li>Contactless Mastercard debit/credit</li>
+                        <li>UnionPay contactless cards</li>
+                        <li>All major international networks</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <h3 class="section-subtitle">How Tap Pay Works (4 Simple Steps)</h3>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Step</th>
+                        <th>Customer Action</th>
+                        <th>System Response</th>
+                        <th>Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>1</strong></td>
+                        <td>Customer unlocks phone (NFC enabled, default payment method set)</td>
+                        <td>NFC reader enters standby mode, emits subtle LED indicator</td>
+                        <td>—</td>
+                    </tr>
+                    <tr>
+                        <td><strong>2</strong></td>
+                        <td>Holds phone within <strong>4 centimeters</strong> of POS NFC reader (top of device)</td>
+                        <td>Proximity detection activated, field strength verified</td>
+                        <td>—</td>
+                    </tr>
+                    <tr>
+                        <td><strong>3</strong></td>
+                        <td>Payment processed using tokenized encryption</td>
+                        <td>One-time encrypted token transmitted (NOT actual account number). Device vibrates/beeps on success.</td>
+                        <td><strong>&lt;1 second ⚡</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>4</strong></td>
+                        <td>Confirmation received</td>
+                        <td>Same instant green checkmark + dual receipt printing as QR payments</td>
+                        <td>2–3 sec</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3 class="section-subtitle">Enterprise-Grade Security Features</h3>
+            
+            <ul class="feature-list">
+                <li><strong>Proximity Requirement (Physical Security):</strong> Near Field Communication (NFC) operates at 13.56 MHz frequency and only functions when two devices are within 4 centimeters (1.5 inches) of each other. Unlike older RFID systems readable from meters away, scammers CANNOT intercept tap signals remotely. The short range is a fundamental physics-based security feature.</li>
+                
+                <li><strong>Tokenization Technology (Data Security):</strong> When a customer taps their phone or card, the device does NOT transmit actual account numbers, CVV codes, or expiry dates. Instead, it sends a one-time-use encrypted "token" — a randomly generated alphanumeric string representing the payment method for this single transaction only. This token is mathematically useless for any subsequent transaction attempt. Even if intercepted, it cannot be reused.</li>
+                
+                <li><strong>AES-256 End-to-End Encryption (Transmission Security):</strong> The entire communication path between customer's device → POS terminal → payment processor gateway uses Advanced Encryption Standard (AES) with 256-bit keys — the same encryption level used by military systems, nuclear facilities, and global banking networks. Brute-force cracking would require $billions in computing resources and billions of years.</li>
+                
+                <li><strong>PCI DSS Level 1 Compliance (Certification Security):</strong> Our POS system meets Payment Card Industry Data Security Standard Level 1 — the highest tier requiring annual third-party audits, penetration testing, vulnerability scanning, and strict access controls. Same certification level required by major banks worldwide.</li>
+                
+                <li><strong>Fraud Detection AI (Behavioral Security):</strong> Modern NFC processors employ machine learning models that analyze transaction velocity, amounts, geographic patterns, and device fingerprints in real-time. Unusual behavior (e.g., 10 taps in 2 minutes from same device) triggers automatic holds for manual review.</li>
+            </ul>
+
+            <h3 class="section-subtitle">Tap Pay vs. QR Scan: When to Use Which Method</h3>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Scenario</th>
+                        <th>Recommended Method</th>
+                        <th>Reason</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Customer has phone in hand, screen already unlocked</td>
+                        <td><strong>NFC Tap Pay</strong></td>
+                        <td>Fastest option (&lt;1 second), minimal friction</td>
+                    </tr>
+                    <tr>
+                        <td>Customer's phone battery low/dead</td>
+                        <td><strong>Physical Card Tap</strong></td>
+                        <td>No phone power needed, works with plastic cards</td>
+                    </tr>
+                    <tr>
+                        <td>Customer prefers visual confirmation before paying</td>
+                        <td><strong>Dynamic QR Scan</strong></td>
+                        <td>Customer sees amount on their screen before confirming PIN</td>
+                    </tr>
+                    <tr>
+                        <td>Older smartphone without NFC hardware (pre-2015 models)</td>
+                        <td><strong>Dynamic QR Scan</strong></td>
+                        <td>Camera-based QR reading works on almost any smartphone</td>
+                    </tr>
+                    <tr>
+                        <td>High-volume rush (50+ customers/hour)</td>
+                        <td><strong>Both methods offered</strong></td>
+                        <td>Let customer choose based on preference; both are equally fast</td>
+                    </tr>
+                    <tr>
+                        <td>First-time digital payment user (unsure how to proceed)</td>
+                        <td><strong>Dynamic QR Scan</strong></td>
+                        <td>More intuitive UI flow, cashier can guide step-by-step</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+        
+        <!-- Performance & ROI -->
+        <section id="performance" class="section">
+            <h2 class="section-title">Performance Impact & ROI Analysis</h2>
+            
+            <h3 class="section-subtitle">Dramatic Operational Improvements During Peak Hours (11AM – 3PM)</h3>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Performance Metric</th>
+                        <th>Old Method (Screenshot Verification)</th>
+                        <th>New Method (POS Dynamic QR/Tap)</th>
+                        <th>Improvement</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Avg. Transaction Time</strong></td>
+                        <td>45 seconds</td>
+                        <td><code style="color: var(--accent-neon);">12 seconds</code></td>
+                        <td><strong style="color: var(--accent-neon);">73% faster ⚡</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Customers Served/Hour</strong></td>
+                        <td>~80 customers</td>
+                        <td><code style="color: var(--accent-neon);">~300 customers</code></td>
+                        <td><strong style="color: var(--accent-neon);">275% more throughput 🚀</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Fraud Incidents/Day</strong></td>
+                        <td>~8 incidents (80% during peak)</td>
+                        <td><code style="color: var(--accent-neon);">0 incidents</code></td>
+                        <td><strong style="color: var(--accent-neon);">100% elimination ✅</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cashier Cognitive Load</strong></td>
+                        <td>Extremely high (multitasking hell)</td>
+                        <td><code style="color: var(--accent-neon);">Low (automated system)</code></td>
+                        <td><strong style="color: var(--accent-neon);">Dramatic reduction 😌</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Manual Accounting Work</strong></td>
+                        <td>~5 hours/week reconciliation</td>
+                        <td><code style="color: var(--accent-neon);">Fully automated reports</code></td>
+                        <td><strong style="color: var(--accent-neon);">Zero manual work 📊</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Queue Length During Peak</strong></td>
+                        <td>15–20 students waiting</td>
+                        <td><code style="color: var(--accent-neon);">3–5 students waiting</code></td>
+                        <td><strong style="color: var(--accent-neon);">75% shorter lines 📉</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Customer Satisfaction Score</strong></td>
+                        <td>6.2/10 (slow service complaints)</td>
+                        <td><code style="color: var(--accent-neon);">9.1/10 (fast, modern experience)</code></td>
+                        <td><strong style="color: var(--accent-neon);">+47% satisfaction ↑</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3 class="section-subtitle">Return on Investment Breakdown</h3>
+            
+            <div class="solution-grid">
+                <div class="solution-card">
+                    <h3>💰 One-Time & Recurring Costs</h3>
+                    <ul>
+                        <li><strong>POS Hardware (one-time):</strong> PKR 15,000 – 25,000</li>
+                        <li><strong>Thermal paper rolls:</strong> ~PKR 200/month (lasts 1-2 months per roll)</li>
+                        <li><strong>Monthly transaction fees:</strong> PKR 112 – 375 (est. based on 100 daily transactions)</li>
+                        <li><strong>Setup time investment:</strong> ~2 hours (one-time only)</li>
+                        <li><strong>Training time/cashier:</strong> &lt;10 minutes initial + 5 min refresher monthly</li>
+                        <li><strong>Ongoing maintenance:</strong> Minimal (software updates auto-install overnight)</li>
+                        <li><strong>Warranty/support:</strong> 1-year manufacturer warranty included</li>
+                    </ul>
+                </div>
+                
+                <div class="solution-card">
+                    <h3>💎 Monthly Savings & Revenue Gains</h3>
+                    <ul>
+                        <li><strong>Fraud elimination savings:</strong> <code style="font-size: 1em;">PKR 67,500 – 75,000</code></li>
+                        <li><strong>Extra revenue (275% more throughput):</strong> PKR 198,000 – 247,500</li>
+                        <li><strong>Accounting labor savings (~5 hrs/wk):</strong> PKR 15,000</li>
+                        <li><strong>Hidden cost elimination:</strong> PKR 23,000 (inventory waste, turnover, overhead)</li>
+                        <li><strong>Brand image/customer loyalty uplift:</strong> Estimated PKR 10,000+</li>
+                        <li style="border-top: 2px solid var(--accent-neon); padding-top: 12px; margin-top: 8px;"><strong>TOTAL MONTHLY BENEFIT:</strong> <code style="font-size: 1.1em; color: var(--accent-neon);">PKR 313,500 – 370,500</code></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="success-box" style="margin-top: 40px;">
+                <h3 style="color: var(--accent-neon); margin-bottom: 16px; font-size: 1.4rem;">⚡ Payback Period Analysis — Three Calculation Methods</h3>
+                
+                <p style="margin-bottom: 12px;"><strong>Method 1 — Conservative (Fraud Savings Only):</strong><br>
+                PKR 67,500/month ÷ PKR 20,000 average hardware cost = <strong style="color: var(--accent-neon);">0.30 months (9 days)</strong></p>
+                
+                <p style="margin-bottom: 12px;"><strong>Method 2 — Moderate (Fraud + Labor Savings):</strong><br>
+                (PKR 67,500 + PKR 15,000) ÷ PKR 20,000 = <strong style="color: var(--accent-neon);">0.41 months (12 days)</strong></p>
+                
+                <p style="margin-bottom: 12px;"><strong>Method 3 — Comprehensive (All Benefits Combined):</strong><br>
+                PKR 342,000 avg monthly benefit ÷ PKR 20,000 = <strong style="color: var(--accent-neon);">0.06 months (1.8 days to recover, then pure profit)</strong></p>
+                
+                <p style="margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(0, 255, 65, 0.2);"><strong style="font-size: 1.1em;">Bottom Line:</strong> Even using the most conservative estimate, you recover your entire investment in <strong>under 10 business days</strong>. After that, every month generates <strong>PKR 313,500–370,500 in net positive value</strong> compared to continuing with the current broken system.</p>
+            </div>
+            
+            <h3 class="section-subtitle">Implementation Timeline & Rollout Plan</h3>
+            
+            <div class="timeline">
+                <div class="timeline-item">
+                    <h4>Week 1: Procurement & Setup (Days 1-7)</h4>
+                    <p>Purchase POS terminal from authorized vendor (Hafeez Center Lahore, Rainbow Center Karachi, College Road Rawalpindi, or Daraz.pk online). Download free apps: EasyPaisa Merchant App, JazzCash Business App, Raast Merchant App. Register merchant accounts using owner CNIC, rent agreement, bank account details. Complete identity verification (takes 1-2 business days).</p>
+                </div>
+                
+                <div class="timeline-item">
+                    <h4>Week 2: Configuration & Testing (Days 8-14)</h4>
+                    <p>Link POS to cafe bank account for automatic end-of-day fund settlement (payments arrive next morning by 9 AM). Configure settings: QR expiry time (3min peak / 5min off-peak), enable automatic receipt printing, set up low-paper alert when &lt;10 rolls remaining. Print test transactions to verify printer functionality. Process 20-30 test payments using team member phones to validate full workflow.</p>
+                </div>
+                
+                <div class="timeline-item">
+                    <h4>Week 3: Staff Training (Days 15-21)</h4>
+                    <p>Train all current cashiers on 4-step workflow (enter amount → show QR/tap → wait confirmation → hand receipt). Create laminated quick-reference guide for counter. Run supervised live shift with manager shadowing. Document edge cases encountered (insufficient funds errors, network timeouts, app crashes) and create troubleshooting cheat sheet.</p>
+                </div>
+                
+                <div class="timeline-item">
+                    <h4>Week 4: Soft Launch (Days 22-28)</h4>
+                    <p>Go live with POS as primary payment method. Keep SMS verification as parallel backup for first week. Monitor transaction success rates, error frequency, cashier confidence levels. Gather informal customer feedback ("Was this faster than before?"). Adjust QR expiry times if needed based on observed customer behavior.</p>
+                </div>
+                
+                <div class="timeline-item">
+                    <h4>Month 2+: Full Operation & Optimization</h4>
+                    <p>Decommission SMS backup method (or keep for emergency outages only). Explore advanced POS features: inventory management integration, sales analytics dashboard, employee scheduling module, loyalty program setup. Review monthly performance reports to identify optimization opportunities (peak-hour staffing adjustments, menu engineering based on sales data).</p>
+                </div>
+            </div>
+
+            <h3 class="section-subtitle">Daily Operations Workflow (Per Customer: &lt;15 Seconds Total)</h3>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Step</th>
+                        <th>Action</th>
+                        <th>Duration</th>
+                        <th>Responsible Party</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>1</strong></td>
+                        <td>Enter bill amount into POS touchscreen</td>
+                        <td>1 second</td>
+                        <td>Cashier</td>
+                    </tr>
+                    <tr>
+                        <td><strong>2</strong></td>
+                        <td>POS generates unique dynamic QR code OR activate NFC reader</td>
+                        <td>&lt;1 second</td>
+                        <td>System (automatic)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>3</strong></td>
+                        <td>Customer scans QR with payment app OR taps phone/card to NFC reader</td>
+                        <td>5–10 seconds</td>
+                        <td>Customer</td>
+                    </tr>
+                    <tr>
+                        <td><strong>4</strong></td>
+                        <td>Customer confirms payment (PIN/fingerprint/face ID) on their device</td>
+                        <td>2–3 seconds</td>
+                        <td>Customer</td>
+                    </tr>
+                    <tr>
+                        <td><strong>5</strong></td>
+                        <td>POS receives server confirmation, displays green checkmark</td>
+                        <td>2–3 seconds</td>
+                        <td>System (automatic)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>6</strong></td>
+                        <td>Thermal printer auto-prints vendor copy + customer receipt</td>
+                        <td>2–3 seconds</td>
+                        <td>System (automatic)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>7</strong></td>
+                        <td>Cashier hands prepared food + customer receipt</td>
+                        <td>2 seconds</td>
+                        <td>Cashier</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><strong>TOTAL TRANSACTION TIME</strong></td>
+                        <td><code style="color: var(--accent-neon); font-size: 1.1em;">12–15 seconds</code></td>
+                        <td>—</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+        
+        <!-- Alternative Solutions -->
+        <section id="alternatives" class="section">
+            <h2 class="section-title">Alternative Solutions Comparison</h2>
+            
+            <h3 class="section-subtitle">Option 2: Payment Sound Box + Static QR Code (Theoretical Low-Cost Alternative)</h3>
+            
+            <div class="alert-box">
+                <strong>⚠️ Important Availability Note:</strong> As of April 2026, this solution is <strong>not commercially available in Pakistan</strong>. EasyPaisa announced a QR SoundBox product in April 2024, but it was limited to enterprise pilot programs only and never rolled out to small merchants like campus cafes. This analysis is based on India's proven Paytm Soundbox model (deployed to 10M+ businesses since 2020).
+            </div>
+
+            <figure class="figure-container">
+                <img src="https://z-cdn-media.chatglm.cn/files/6c27abf3-dd95-4968-9c35-1501c9b2279f.png?auth_key=1877050613-16c8fba5e92c4c5f84125cf2b234ada1-0-fa9dc171014b040747062f2976ae027a" alt="Payment Sound Box Devices" class="figure-img">
+                <figcaption>Figure 2: Payment sound box devices (similar to India's proven Paytm Soundbox model). These compact wireless speakers connect to your merchant account via Bluetooth/Wi-Fi and instantly announce payment confirmations aloud when customers complete digital transactions — e.g., "Payment of two hundred twenty-five rupees received successfully from JazzCash."</figcaption>
+            </figure>
+            
+            <p class="content-text"><strong>How It Would Work:</strong> A small portable wireless speaker (size of deck of cards) connects to merchant account via Bluetooth/Wi-Fi. When customer makes digital payment, sound box instantly announces aloud: <em>"Payment of two hundred twenty-five rupees received successfully from JazzCash"</em>. Cashier hears announcement, verifies amount matches bill, then releases food.</p>
+            
+            <h3 class="section-subtitle">Sound Box Technical Specifications (Based on Indian Market Data)</h3>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Specification</th>
+                        <th>Value</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Device Dimensions</strong></td>
+                        <td>90mm × 90mm × 45mm</td>
+                        <td>Size of deck of playing cards</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Weight</strong></td>
+                        <td>120–150 grams</td>
+                        <td>Lightweight, portable</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Connectivity</strong></td>
+                        <td>Bluetooth 5.0 + Wi-Fi (2.4GHz)</td>
+                        <td>Pairs with merchant smartphone</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Speaker Output</strong></td>
+                        <td>2W–3W RMS</td>
+                        <td>Loud enough for noisy cafes (85dB at 1m)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Battery Life</strong></td>
+                        <td>6–8 hours active use</td>
+                        <td>USB-C charging, 2hr full charge</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Audio Latency</strong></td>
+                        <td>2–10 seconds post-payment</td>
+                        <td>Depends on network speed</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Supported Languages</strong></td>
+                        <td>Urdu, English, regional languages</td>
+                        <td>Configurable in companion app</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Offline Cache</strong></td>
+                        <td>Last 20–50 announcements</td>
+                        <td>Stores locally during brief outages</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="solution-grid">
+                <div class="solution-card" style="border-left: 3px solid var(--accent-neon);">
+                    <h3>✅ Advantages</h3>
+                    <ul>
+                        <li><strong>Ultra-low investment:</strong> ~PKR 3,000 initial (sound box + printed QR standee) if reusing existing phone</li>
+                        <li><strong>Zero technical expertise needed:</strong> If you can hear, you can verify payments — no app navigation, no QR generation steps</li>
+                        <li><strong>Works during short internet outages:</strong> Most sound boxes cache last 20–50 announcements locally on device storage</li>
+                        <li><strong>Clear upgrade path:</strong> Can migrate to full POS later without losing merchant account history or transaction records</li>
+                        <li><strong>Psychological deterrent effect:</strong> Audible announcements make scammers aware that payments are being monitored publicly</li>
+                    </ul>
+                </div>
+                
+                <div class="solution-card" style="border-left: 3px solid #ff6b6b;">
+                    <h3>❌ Critical Limitations</h3>
+                    <ul>
+                        <li><strong>NOT available in Pakistan currently</strong> (enterprise pilot only, no consumer/small business version launched)</li>
+                        <li><strong>Static QR tampering risk:</strong> Sophisticated scammers can physically replace your standee QR sticker with one pointing to their own account — requires hourly visual inspection</li>
+                        <li><strong>No automatic receipt printing:</strong> Requires handwritten notes or no paper trail at all — looks unprofessional vs competitors, creates massive end-of-day accounting workload</li>
+                        <li><strong>Manual amount entry errors:</strong> Customers type payment amounts themselves into their apps — accidental underpayment (entering PKR 22 instead of PKR 225) or intentional underpayment possible unless cashier double-checks manually</li>
+                        <li><strong>Noise interference during peak hours:</strong> Campus cafe environment gets extremely loud (student chatter, music, blender noise, coffee machine). Cashiers may miss audio announcements during 11AM-3PM rush, leading to either giving food before payment confirms (fraud risk) or making customers wait unnecessarily long (bad UX)</li>
+                        <li><strong>No NFC tap pay support:</strong> Basic sound box models only accept QR code payments — cannot process contactless tap transactions from SadaPay/NeaPay users or physical debit/credit cards</li>
+                        <li><strong>Limited analytics capability:</strong> Basic logging only — no sales trend analysis, no item-level tracking, no tax calculation automation</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <hr style="border: none; border-top: 1px solid var(--glass-border); margin: 50px 0;">
+            
+            <h3 class="section-subtitle">Option 3: SMS Verification Fallback (Emergency Ultra-Low-Tech Method)</h3>
+
+            <figure class="figure-container">
+                <img src="https://z-cdn-media.chatglm.cn/files/e659a656-3f8e-403a-9382-d0ff45b5c391.png?auth_key=1877050613-c210f9b4faf14d50a276b7c765969fa3-0-b3df482a62dacdb4d368d3296973c6df" alt="Dedicated Merchant Smartphone" class="figure-img" style="max-width: 400px;">
+                <figcaption>Figure 3: Dedicated old smartphone for SMS verification fallback method. Any working Android device (can be an older model like this Samsung Galaxy) kept logged into the cafe's merchant account 24/7. The cashier monitors incoming SMS notifications from EasyPaisa/JazzCash confirming incoming payments before releasing food to customers.</figcaption>
+            </figure>
+            
+            <p class="content-text"><strong>How It Works:</strong> Use an old working Android smartphone dedicated exclusively to merchant operations. Keep it logged into EasyPaisa/JazzCash merchant account, plugged into charger and stationed at register 24/7. Display merchant phone number prominently at counter (printed sign, sticker on register). When customer pays digitally, cashier waits 5–30 seconds for SMS notification confirming payment, verifies amount matches bill exactly, then releases food.</p>
+            
+            <h3 class="section-subtitle">SMS Fallback Operational Details</h3>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Operational Parameter</th>
+                        <th>Specification</th>
+                        <th>Risk Mitigation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Device Requirements</strong></td>
+                        <td>Any Android 6.0+ phone with working SIM slot</td>
+                        <td>Can be 5+ year old model; doesn't need camera/good screen</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Network Dependency</strong></td>
+                        <td>Cellular 2G/3G sufficient (no data plan needed)</td>
+                        <td>SMS works on basic voice plans; no Wi-Fi dependency</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Expected SMS Delay</strong></td>
+                        <td>5–30 seconds average (up to 5 minutes during congestion)</td>
+                        <td>Train cashiers to wait minimum 30 seconds before flagging issue</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Vulnerability Window</strong></td>
+                        <td>5–30 seconds between customer initiating payment and SMS arrival</td>
+                        <td>Determined scammers can exploit this gap with fake screenshots</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Daily SMS Volume</strong></td>
+                        <td>~100 transaction confirmations + promotional messages</td>
+                        <td>Requires nightly cleanup to prevent storage overflow</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Device Security</strong></td>
+                        <td>Must remain physically secured at counter 24/7</td>
+                        <td>Enable PIN/biometric lock; consider cable lock attachment</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="solution-grid">
+                <div class="solution-card" style="border-left: 3px solid var(--accent-neon);">
+                    <h3>✅ Advantages</h3>
+                    <ul>
+                        <li><strong>Zero/minimal upfront cost:</strong> Completely free if reusing old spare phone lying in drawer; maximum PKR 5,000 if purchasing used budget phone from local market</li>
+                        <li><strong>Extremely simple to understand and implement:</strong> No apps to install beyond standard merchant app, no device pairing, no technical configuration whatsoever. Anyone who can read an SMS can verify payments — even brand-new cashier with zero prior training</li>
+                        <li><strong>Universal compatibility:</strong> Works with ALL payment methods that support sending money to a phone number (EasyPaisa, JazzCash, bank apps, Raast, UBL Pay, HBL Konnect, etc.) — no compatibility restrictions or app-specific limitations</li>
+                        <li><strong>Works WITHOUT internet connectivity:</strong> SMS uses basic cellular networks (2G/3G sufficient), so payment confirmations arrive even during campus Wi-Fi outages, cellular data congestion periods, or power failures affecting internet infrastructure</li>
+                        <li><strong>Permanent SMS audit trail:</strong> Every payment confirmation SMS stays on the merchant phone indefinitely until manually deleted. You can scroll through message history at end of day to reconcile total sales, or export messages to spreadsheet for record-keeping</li>
+                    </ul>
+                </div>
+                
+                <div class="solution-card" style="border-left: 3px solid #ffa500;">
+                    <h3>⚠️ Significant Operational Risks</h3>
+                    <ul>
+                        <li><strong>High residual fraud vulnerability (~40% remaining):</strong> There is an inherent 5–30 second delay between customer initiating payment on their phone and SMS arriving on your merchant phone. Determined scammers can show fake screenshot during this delay window and flee with food before real confirmation arrives. Additionally, SMS spoofing apps exist (rare but technically possible) that can generate fake confirmation messages appearing to come from EasyPaisa/JazzCash sender IDs.</li>
+                        
+                        <li><strong>Severe checkout slowdowns during peak hours:</strong> Waiting for each SMS to arrive adds 10–30 seconds of dead time per transaction. During 11:00–14:00 peak hours when you're serving 50+ customers/hour, this creates 8–25 minutes of unnecessary total wait time across all customers — driving impatient hungry students to competitor campus cafes nearby</li>
+                        
+                        <li><strong>SMS delays and occasional delivery failures:</strong> Pakistani cellular networks frequently experience congestion during peak periods (especially after exam results release, holiday seasons, promotional campaigns by telcos). SMS deliveries can be delayed by 1–5 minutes, or occasionally fail entirely — forcing awkward conversations with customers who claim "I already paid but you haven't received it yet"</li>
+                        
+                        <li><strong>Unprofessional appearance vs modern competitors:</strong> Asking customers to "send money to our phone number" feels informal and outdated compared to modern QR/tap pay options that competing campus vendors may offer. May damage Arosa Cafe's brand perception among tech-savvy FAST students who expect seamless digital experiences everywhere they shop</li>
+                        
+                        <li><strong>Massive manual accounting burden:</strong> Sorting through hundreds of mixed notification/promotional/transactional SMS messages every night to calculate daily sales takes 15–30 minutes of tedious, error-prone manual work. No automatic reporting, no sales analytics by hour/day/week, no inventory tracking integration, no tax liability calculation assistance</li>
+                        
+                        <li><strong>Security risk if device lost or stolen:</strong> If the dedicated merchant phone is lost, stolen, or temporarily misplaced, anyone who gains physical access could potentially transfer the entire merchant balance to their own account, change passwords, access sensitive business data, or view transaction histories containing partial customer information</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Decision Matrix -->
+        <section id="comparison" class="section">
+            <h2 class="section-title">Decision Matrix & Final Recommendation</h2>
+            
+            <h3 class="section-subtitle">Comprehensive Multi-Factor Comparison (13 Evaluation Criteria)</h3>
+            
+            <div style="overflow-x: auto;">
+                <table style="font-size: 0.92rem;">
+                    <thead>
+                        <tr>
+                            <th>Evaluation Factor</th>
+                            <th style="background: linear-gradient(135deg, rgba(0, 255, 65, 0.15), rgba(0, 217, 255, 0.15));"><strong>Primary POS Solution</strong></th>
+                            <th>Sound Box (Theoretical)</th>
+                            <th>SMS Fallback</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Fraud Elimination Rate</strong></td>
+                            <td><code style="color: var(--accent-neon); font-size: 1.05em;">100% ✅</code></td>
+                            <td>~80%</td>
+                            <td>~60%</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Monthly Fraud Loss Remaining</strong></td>
+                            <td><code style="color: var(--accent-neon);">PKR 0</code></td>
+                            <td>PKR 13,500–15,000</td>
+                            <td>PKR 27,000–33,750</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Total Upfront Capital Cost</strong></td>
+                            <td>PKR 15,000 – 25,000</td>
+                            <td>PKR 2,000 – 4,000 (when available)</td>
+                            <td>PKR 0 – 5,000</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Monthly Ongoing Costs</strong></td>
+                            <td>PKR 112 – 375 (transaction fees only)</td>
+                            <td>~PKR 330 rental + fees</td>
+                            <td>Transaction fees only</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Avg. Transaction Time (Peak Hours)</strong></td>
+                            <td><code style="color: var(--accent-neon);">12 seconds</code></td>
+                            <td>18 seconds</td>
+                            <td>35 seconds</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Customers Served/Hour (11AM-3PM)</strong></td>
+                            <td><code style="color: var(--accent-neon);">~300</code></td>
+                            <td>~200</td>
+                            <td>~102</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Cashier Training Time</strong></td>
+                            <td>10 minutes</td>
+                            <td>5 minutes</td>
+                            <td>2 minutes</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Professional Appearance / Brand Image</strong></td>
+                            <td><code style="color: var(--accent-neon);">Excellent (modern, premium)</code></td>
+                            <td>Good (acceptable)</td>
+                            <td>Poor (outdated, informal)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Accounting Automation Level</strong></td>
+                            <td><code style="color: var(--accent-neon);">Full reporting + analytics</code></td>
+                            <td>Basic logging only</td>
+                            <td>None (fully manual)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>NFC Tap Pay Support</strong></td>
+                            <td><code style="color: var(--accent-neon);">Yes (full support) ✅</code></td>
+                            <td>No (basic models)</td>
+                            <td>No</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Currently Available in Pakistan?</strong></td>
+                            <td><code style="color: var(--accent-neon);">Yes ✅ (widely available now)</code></td>
+                            <td>No (theoretical only)</td>
+                            <td>Yes (works immediately)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Scalability for Future Growth</strong></td>
+                            <td><code style="color: var(--accent-neon);">Excellent (supports add-ons)</code></td>
+                            <td>Limited (dead-end solution)</td>
+                            <td>None (no upgrade path)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Estimated Payback Period</strong></td>
+                            <td><code style="color: var(--accent-neon); font-size: 1.05em;">&lt;1 month ⚡</code></td>
+                            <td>N/A (not available)</td>
+                            <td>Immediate (no upfront cost)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>3-Year Total Cost of Ownership</strong></td>
+                            <td><code style="color: var(--accent-neon);">PKR 20K + fees (ROI positive Day 10)</code></td>
+                            <td>PKR 13K+ rental + PKR 290K+ fraud losses</td>
+                            <td>PKR 972K+ cumulative fraud losses</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <h3 class="section-subtitle" style="margin-top: 55px;">🎯 Final Recommendation: Implement Primary POS Solution Immediately</h3>
+            
+            <div class="success-box" style="margin: 35px 0;">
+                <h3 style="color: var(--accent-neon); margin-bottom: 20px; font-size: 1.5rem;">The Business Case Is Overwhelmingly Clear</h3>
+                
+                <p style="margin-bottom: 18px; font-size: 1.05rem;">
+                    Even using <strong>conservative estimated fraud losses of PKR 67,500/month</strong>, the Android POS terminal pays for itself in <strong>less than 30 days</strong> purely from eliminated scam losses — BEFORE counting any additional benefits:
+                </p>
+                
+                <ul class="feature-list">
+                    <li><strong>Increased revenue from 275% faster checkout:</strong> Serve 220+ extra customers per day during peak 11AM-3PM hours = estimated PKR 198,000–247,500/month additional revenue from capacity that was previously lost to slow queues</li>
+                    <li><strong>Accounting labor savings:</strong> Automated end-of-day reporting, sales analytics dashboards, tax calculation tools save ~5 hours/week = PKR 15,000/month at minimum wage rates</li>
+                    <li><strong>Hidden cost elimination:</strong> Eliminate PKR 23,000/month in inventory waste, staff turnover costs, and reconciliation overhead currently draining profits silently</li>
+                    <li><strong>Professional brand image upgrade:</strong> Modern tech-forward positioning increases customer loyalty, word-of-mouth referrals among FAST student body, and perceived quality premium justifying potential price increases</li>
+                    <li><strong>Future-proof platform:</strong> Ready for delivery ordering (Foodpanda/Cheetay integration), online pre-orders for classes, student loyalty/rewards program, inventory management with auto-reorder alerts — all via downloadable add-on apps, no new hardware purchases ever needed</li>
+                </ul>
+            </div>
+            
+            <h3 class="section-subtitle">Recommended Implementation Strategy (Phased Approach)</h3>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Priority</th>
+                        <th>System</th>
+                        <th>Role</th>
+                        <th>Timeline</th>
+                        <th>Budget Impact</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong style="color: var(--accent-neon);">#1 PRIMARY</strong></td>
+                        <td>Android POS with Dynamic QR + NFC Tap Pay</td>
+                        <td>Main daily payment processing system</td>
+                        <td><strong>Deploy IMMEDIATELY</strong> (Week 1-4 rollout)</td>
+                        <td>PKR 15K–25K one-time</td>
+                    </tr>
+                    <tr>
+                        <td>#2 BACKUP</td>
+                        <td>SMS Verification Method</td>
+                        <td>Emergency fallback during rare POS outages, technical issues, or extended power/internet failures</td>
+                        <td>Keep ready as contingency from Day 1</td>
+                        <td>PKR 0–5K (if new phone needed)</td>
+                    </tr>
+                    <tr>
+                        <td>#3 MONITOR</td>
+                        <td>Sound Box Option</td>
+                        <td>Re-evaluate when Pakistani fintech companies launch localized consumer version</td>
+                        <td>Expected 12–18 months (speculative timeline)</td>
+                        <td>PKR 2K–4K (future consideration)</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="alert-box" style="margin-top: 40px; text-align: center; font-size: 1.1rem;">
+                <strong style="font-size: 1.3rem; color: var(--accent-purple);">💡 Don't Wait — Every Month of Delay Costs ~PKR 90,500+</strong><br><br>
+                <div style="text-align: left; display: inline-block; margin-top: 15px;">
+                    Direct fraud losses: <strong style="color: #ff6b6b;">PKR 67,500/month</strong><br>
+                    Hidden operational costs: <strong style="color: #ff6b6b;">PKR 23,000/month</strong><br>
+                    <strong style="font-size: 1.15em; color: var(--text-primary);">Total monthly bleed: PKR 90,500</strong>
+                </div>
+                <br><br>
+                The extra PKR 18,000 upfront investment over the theoretical sound box option returns <strong style="color: var(--accent-neon);">at least 10x its value</strong> over the POS system's 3–5 year operational lifespan.<br><br>
+                <strong style="color: var(--accent-neon); font-size: 1.15em;">This isn't an expense — it's a high-return investment that pays for itself in under 10 business days and generates pure profit every day thereafter.</strong>
+            </div>
+
+          
+        
+        <!-- References -->
+        <section id="citation" class="section">
+            <h2 class="section-title">References & Sources</h2>
+            
+            <ul class="citation-list">
+                <li data-ref="[S1]">
+                    State Bank of Pakistan (2022): <em>Standard for Interoperable QR Code Payments (Document CL2-Annex)</em><br>
+                    <a href="https://www.sbp.org.pk/disd/2022/CL2-Annex.pdf" target="_blank" rel="noopener noreferrer">https://www.sbp.org.pk/disd/2022/CL2-Annex.pdf</a>
+                </li>
+                <li data-ref="[S2]">
+                    JazzCash Official Documentation: <em>Raast – Pakistan's First Instant Payment System</em><br>
+                    <a href="https://www.jazzcash.com.pk/shop/money-transfer-shop/raast-pakistans-first-instant-payment-system" target="_blank" rel="noopener noreferrer">https://www.jazzcash.com.pk/shop/money-transfer-shop/raast-pakistans-first-instant-payment-system</a>
+                </li>
+                <li data-ref="[S3]">
+                    JazzCash Tap Pay Workflow Diagram<br>
+                    <a href="https://qc4n.bigmodel.cn/JCIntfvkj_searched_original.png" target="_blank" rel="noopener noreferrer">https://qc4n.bigmodel.cn/JCIntfvkj_searched_original.png</a>
+                </li>
+                <li data-ref="[S4]">
+                    Associated Press of Pakistan (April 2024): <em>EasyPaisa launches QR SoundBox to revolutionize Digital Payments Landscape</em><br>
+                    <a href="https://www.app.com.pk/business/easypaisa-launches-qr-soundbox-to-revolutionize-digital-payments-landscape" target="_blank" rel="noopener noreferrer">https://www.app.com.pk/business/easypaisa-launches-qr-soundbox-to-revolutionize-digital-payments-landscape</a>
+                </li>
+                <li data-ref="[S5]">
+                    JazzCash Merchant Schedule of Charges<br>
+                    <a href="https://www.jazzcash.com.pk/schedule-of-charges-soc" target="_blank" rel="noopener noreferrer">https://www.jazzcash.com.pk/schedule-of-charges-soc</a>
+                </li>
+                <li data-ref="[S6]">
+                    EasyPaisa Merchant Pricing Structure<br>
+                    <a href="https://ru.scribd.com/doc/38007269/Easypaisa-All-Pricing-and-Commissioning" target="_blank" rel="noopener noreferrer">https://ru.scribd.com/doc/38007269/Easypaisa-All-Pricing-and-Commissioning</a>
+                </li>
+                <li data-ref="[S7]">
+                    CashFree (2026): <em>Fake Payment Screenshot Scams 2026: How to Detect & Prevent</em><br>
+                    <a href="https://www.cashfree.com/blog/fake-payment-screenshot-scams" target="_blank" rel="noopener noreferrer">https://www.cashfree.com/blog/fake-payment-screenshot-scams</a>
+                </li>
+                <li data-ref="[S8]">
+                    PhonePe: <em>How to Avoid Becoming a Victim of Fake Payment Screenshots</em><br>
+                    <a href="https://www.phonepe.com/blog/trust-and-safety/heres-a-quick-guide-to-help-you-avoid-becoming-a-victim-of-fake-payment-screenshots-2" target="_blank" rel="noopener noreferrer">https://www.phonepe.com/blog/trust-and-safety/heres-a-quick-guide-to-help-you-avoid-becoming-a-victim-of-fake-payment-screenshots-2</a>
+                </li>
+                <li data-ref="[S9]">
+                    Paytm for Business: <em>Soundbox Official Product Page</em><br>
+                    <a href="https://business.paytm.com/soundbox" target="_blank" rel="noopener noreferrer">https://business.paytm.com/soundbox</a>
+                </li>
+                <li data-ref="[S10]">
+                    Paytm Soundbox Pricing & Plans<br>
+                    <a href="https://es.scribd.com/document/551506088/19-PSA-SoundBox-Training-Deck-pptx" target="_blank" rel="noopener noreferrer">https://es.scribd.com/document/551506088/19-PSA-SoundBox-Training-Deck-pptx</a>
+                </li>
+                <li data-ref="[S11]">
+                    User-provided Android POS Device Image<br>
+                    <a href="https://z-cdn-media.chatglm.cn/files/58eceda3-2faf-45e8-87a5-0aaaf296af8c.png" target="_blank" rel="noopener noreferrer">https://z-cdn-media.chatglm.cn/files/58eceda3-2faf-45e8-87a5-0aaaf296af8c.png</a>
+                </li>
+                <li data-ref="[S12]">
+                    EasyPaisa Dynamic QR Merchant Interface Image<br>
+                    <a href="https://qc4n.bigmodel.cn/DigitFvLx_searched_original.jpg" target="_blank" rel="noopener noreferrer">https://qc4n.bigmodel.cn/DigitFvLx_searched_original.jpg</a>
+                </li>
+                <li data-ref="[S13]">
+                    State Bank of Pakistan: <em>Raast Person-to-Merchant (P2M) QR Payment Guidelines</em><br>
+                    <a href="https://www.sbp.org.pk/dfs/Raast-P2M.html" target="_blank" rel="noopener noreferrer">https://www.sbp.org.pk/dfs/Raast-P2M.html</a>
+                </li>
+                <li data-ref="[S14]">
+                    LinkedIn: <em>Dynamic vs Static QR Codes for Enterprise Payments</em><br>
+                    <a href="https://www.linkedin.com/posts/vipin-gupta-pmp%C2%AE-csm%C2%AE-cspo%C2%AE-safe%C2%AE-a1933338_in-the-world-of-digital-payments-not-all-activity-7431749779849748480-54wY" target="_blank" rel="noopener noreferrer">https://www.linkedin.com/posts/vipin-gupta-pmp%C2%AE-csm%C2%AE-cspo%C2%AE-safe%C2%AE-a1933338_in-the-world-of-digital-payments-not-all-activity-7431749779849748480-54wY</a>
+                </li>
+                <li data-ref="[S15]">
+                    Profit Pakistan Today: <em>QR Codes Did Not Bring a Payments Revolution (Dynamic QR Analysis)</em><br>
+                    <a href="https://profit.pakistantoday.com.pk/2021/01/30/qr-codes-did-not-bring-a-payments-revolution-that-doesnt-mean-its-over" target="_blank" rel="noopener noreferrer">https://profit.pakistantoday.com.pk/2021/01/30/qr-codes-did-not-bring-a-payments-revolution-that-doesnt-mean-its-over</a>
+                </li>
+            </ul>
+            
+            <div class="alert-box" style="margin-top: 45px; text-align: center;">
+                <strong style="font-size: 1.1rem;">⚠️ Academic Disclaimer</strong><br><br>
+                All financial figures, customer counts, footfall estimates, scam rates, loss calculations, and operational metrics presented in this document are <strong>projected/estimated values for academic semester project purposes only</strong>. They are not based on real Arosa Cafe internal financial data, and actual results may vary significantly from these projections.<br><br>
+                <em>This document was created as part of a university course assignment and should not be used for actual business decision-making without independent verification of all assumptions and data points.</em>
+            </div>
+        </section>
+    </div>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>© 2026 Hamza · Mihaal · Miqdaam | FAST National University (New Campus)</p>
+            <p style="margin-top: 12px; opacity: 0.6; font-size: 0.85rem;">Semester Project Documentation | Submission Date: April 25, 2026</p>
+        </div>
+    </footer>
+    
+</body>
+</html>
